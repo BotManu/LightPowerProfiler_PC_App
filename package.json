@@ -1,0 +1,19 @@
+{
+    "name": "electron-serial-plotter",
+    "version": "1.0.0",
+    "description": "An Electron app for plotting serial data in real-time.",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "dependencies": {
+        "chart.js": "4.4.3",
+        "serialport": "12.0.0"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "electron-builder": "^24.13.3",
+        "electron": "31.3.1"
+    }
+}
