@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Light Power Profiler - Control Panel</title>
+</head>
+<body>
+  <h1>Light Power Profiler - Control Panel</h1>
+  <form id="controlForm">
+    <label for="serialPort">Serial Port:</label>
+    <select id="serialPort">
+      <!-- Options will be populated dynamically -->
+    </select>
+    <label for="baudRate">Baud Rate:</label>
+    <select id="baudRate">
+      <option value="9600">9600</option>
+      <option value="115200" selected>115200</option>
+      <!-- Add more baud rate options as needed -->
+    </select>
+    <button type="button" id="connectBtn">Connect</button>
+  </form>
+  <script src="controlPanel.js"></script>
+</body>
+</html>
