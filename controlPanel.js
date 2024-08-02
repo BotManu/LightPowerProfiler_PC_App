@@ -4,6 +4,8 @@ document.getElementById('connectBtn').addEventListener('click', () => {
   const serialPort = document.getElementById('serialPort').value;
   const baudRate = parseInt(document.getElementById('baudRate').value, 10);
   ipcRenderer.send('connect-serial', { serialPort, baudRate });
+  // Send an IPC message to main process to create a new graph window
+  ipcRenderer.send('create-graph-window', { serialPort, baudRate });
 });
 
 ipcRenderer.on('serial-ports-list', (event, ports) => {

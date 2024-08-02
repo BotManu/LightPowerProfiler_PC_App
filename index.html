@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Serial Data Plotter</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+  <label for="dataPoints">Data Points:</label>
+  <select id="dataPoints">
+    <option value="50">50</option>
+    <option value="100">100</option>
+    <option value="200">200</option>
+    <option value="500" selected>500</option>
+  </select>
+  <!-- Add these checkboxes inside the <body> tag -->
+  <label><input type="checkbox" id="toggleVbus" checked>Vbus</label>
+  <label><input type="checkbox" id="toggleVshunt" checked>Vshunt</label>
+  <label><input type="checkbox" id="toggleCurrent" checked>Current</label>
+  <label><input type="checkbox" id="togglePower" checked>Power</label>
+  <label><input type="checkbox" id="toggleEnergy" checked>Energy</label>
+  <label><input type="checkbox" id="toggleCharge" checked>Charge</label>
   <canvas id="dataChart"></canvas>
   <script src="renderer.js"></script>
 </body>
+
 </html>

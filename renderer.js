@@ -4,15 +4,14 @@ const ctx = document.getElementById('dataChart').getContext('2d');
 const dataChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: [], // Time or measurement index
+    labels: [],
     datasets: [
-      // Create 6 datasets, one for each float number
-    //   { label: 'Sensor 1', data: [], borderColor: 'red' },
-    //   { label: 'Sensor 2', data: [], borderColor: 'green' },
-      { label: 'Sensor 3', data: [], borderColor: 'blue' }
-    //   { label: 'Sensor 4', data: [], borderColor: 'yellow' },
-    //   { label: 'Sensor 5', data: [], borderColor: 'purple' },
-    //   { label: 'Sensor 6', data: [], borderColor: 'orange' }
+      { label: 'Vbus', data: [], borderColor: 'red' },
+      { label: 'Vshunt', data: [], borderColor: 'green' },
+      { label: 'Current', data: [], borderColor: 'blue' },
+      { label: 'Power', data: [], borderColor: 'yellow' },
+      { label: 'Energy', data: [], borderColor: 'purple' },
+      { label: 'Charge', data: [], borderColor: 'orange' }
     ]
   },
   options: {
@@ -21,30 +20,79 @@ const dataChart = new Chart(ctx, {
         beginAtZero: true
       }
     },
-    animation: {duration: 0}
+    animation: { duration: 0 }
   }
 });
 
-ipcRenderer.on('serial-data', (event, floats) => {
-    // Assuming floats is an array of 6 numbers
-    if (floats.length === 6) {
-        const nextIndex = dataChart.data.labels.length + 1;
-        dataChart.data.labels.push(nextIndex.toString());
-        // floats.forEach((value, index) => {
-        //   dataChart.data.datasets[index].data.push(value);
-        // });
-        dataChart.data.datasets[0].data.push(floats[2]);
-
-        // Keep only the last 50 data points
-        if (dataChart.data.labels.length > 500) {
-            dataChart.data.labels.shift();
-            dataChart.data.datasets[0].data.shift();
-        }
-
-        dataChart.update();
-    }
+document.getElementById('toggleVbus').addEventListener('change', (event) => {
+  dataChart.data.datasets[0].hidden = !event.target.checked;
+  dataChart.update();
 });
 
+document.getElementById('toggleVshunt').addEventListener('change', (event) => {
+  dataChart.data.datasets[1].hidden = !event.target.checked;
+  dataChart.update();
+});
+
+document.getElementById('toggleCurrent').addEventListener('change', (event) => {
+  dataChart.data.datasets[2].hidden = !event.target.checked;
+  dataChart.update();
+});
+
+document.getElementById('togglePower').addEventListener('change', (event) => {
+  dataChart.data.datasets[3].hidden = !event.target.checked;
+  dataChart.update();
+});
+
+document.getElementById('toggleEnergy').addEventListener('change', (event) => {
+  dataChart.data.datasets[4].hidden = !event.target.checked;
+  dataChart.update();
+});
+
+document.getElementById('toggleCharge').addEventListener('change', (event) => {
+  dataChart.data.datasets[5].hidden = !event.target.checked;
+  dataChart.update();
+});
+
+ipcRenderer.on('serial-data', (event, floats) => {
+  // Assuming floats is an array of 6 numbers
+  if (floats.length === 6) {
+    const nextIndex = dataChart.data.labels.length + 1;
+    dataChart.data.labels.push(nextIndex.toString());
+    // Iterate over each dataset and push the corresponding data point
+    dataChart.data.datasets.forEach((dataset, index) => {
+      if (index < floats.length) { // Ensure there's a corresponding float
+        dataset.data.push(floats[index]);
+      }
+    });
+
+    // Keep only the last N data points, where N is selected by the user
+    if (dataChart.data.labels.length > maxDataPoints) {
+      trimDataPoints();
+    }
+
+    dataChart.update();
+  }
+});
+
+const dataPointsSelect = document.getElementById('dataPoints');
+let maxDataPoints = parseInt(dataPointsSelect.value, 10);
+
+dataPointsSelect.addEventListener('change', () => {
+  maxDataPoints = parseInt(dataPointsSelect.value, 10);
+  trimDataPoints();
+});
+
+function trimDataPoints() {
+  while (dataChart.data.labels.length > maxDataPoints) {
+    dataChart.data.labels.shift();
+    dataChart.data.datasets.forEach(dataset => {
+      dataset.data.shift();
+    });
+  }
+  dataChart.update();
+}
+
 window.addEventListener('resize', () => {
-    dataChart.resize();
+  dataChart.resize();
 });
